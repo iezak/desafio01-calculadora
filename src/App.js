@@ -22,6 +22,24 @@ const App = () => {
     setFirstNumer(formattedResult);
   };
 
+  const calculate = (first, second, selectedOperation) => {
+    const firstValue = Number(first);
+    const secondValue = Number(second);
+
+    switch (selectedOperation) {
+      case "+":
+        return firstValue + secondValue;
+      case "-":
+        return firstValue - secondValue;
+      case "*":
+        return firstValue * secondValue;
+      case "/":
+        return firstValue / secondValue;
+      default:
+        return secondValue;
+    }
+  };
+
   const handleONClear = () => {
     setCurrentNumber("0");
     setFirstNumer(null);
@@ -54,119 +72,47 @@ const App = () => {
     setCurrentNumber((prev) => {
       if (prev.length === 1) return "0";
 
-      return prev.slice(0, -1);
+      const value =  prev.slice(0, -1);
+
+      if (value === "-") return 0
+
+      return value
     });
   };
 
-  const handleSumNumber = () => {
+  const handleOperation = (selectedOperation) => {
+    if (firstNumber !== null && operation !== "" && !overwrite) {
+      if (operation === "/" && Number(currentNumber) === 0) return;
+
+      const result = calculate(firstNumber, currentNumber, operation);
+
+      setResult(result);
+      setLastNumber(null);
+      setOperation(selectedOperation);
+      setOverwrite(true);
+      return;
+    }
+
+    setFirstNumer(String(currentNumber));
+    setLastNumber(null);
+    setOperation(selectedOperation);
     setOverwrite(true);
-    if (lastNumber !== null && overwrite) {
-      setFirstNumer(String(currentNumber));
-      setLastNumber(null);
-      setOperation("+");
-      setOverwrite(true);
-      return;
-    }
+  };
 
-    if (firstNumber === null) {
-      setFirstNumer(String(currentNumber));
-      setOperation("+");
-      setOverwrite(true);
-      return;
-    }
-
-    if (!overwrite) {
-      const sum = Number(firstNumber) + Number(currentNumber);
-
-      setResult(sum);
-      setLastNumber(null);
-      setOperation("+");
-      setOverwrite(true);
-    }
+  const handleSumNumber = () => {
+    handleOperation("+");
   };
 
   const handleMinusNumber = () => {
-    setOverwrite(true);
-    if (lastNumber !== null && overwrite) {
-      setFirstNumer(String(currentNumber));
-      setLastNumber(null);
-      setOperation("-");
-      setOverwrite(true);
-      return;
-    }
-
-    if (firstNumber === null) {
-      setFirstNumer(String(currentNumber));
-      setOperation("-");
-      setOverwrite(true);
-      return;
-    }
-
-    if (!overwrite) {
-      const minus = Number(firstNumber) - Number(currentNumber);
-
-      setResult(minus);
-      setLastNumber(null);
-      setOperation("-");
-      setOverwrite(true);
-    }
+    handleOperation("-");
   };
 
   const handleMutNumber = () => {
-    setOverwrite(true);
-    if (lastNumber !== null && overwrite) {
-      setFirstNumer(String(currentNumber));
-      setLastNumber(null);
-      setOperation("*");
-      setOverwrite(true);
-      return;
-    }
-
-    if (firstNumber === null) {
-      setFirstNumer(String(currentNumber));
-      setOperation("*");
-      setOverwrite(true);
-      return;
-    }
-
-    if (!overwrite) {
-      const mut = Number(firstNumber) * Number(currentNumber);
-
-      setResult(mut);
-      setLastNumber(null);
-      setOperation("*");
-      setOverwrite(true);
-    }
+    handleOperation("*");
   };
 
   const handleDivNumber = () => {
-    setOverwrite(true);
-
-    if (lastNumber !== null && overwrite) {
-      setFirstNumer(String(currentNumber));
-      setLastNumber(null);
-      setOperation("/");
-      setOverwrite(true);
-      return;
-    }
-
-    if (firstNumber === null) {
-      setFirstNumer(String(currentNumber));
-      setOperation("/");
-      setOverwrite(true);
-      return;
-    }
-
-    if (!overwrite) {
-      if (Number(currentNumber) === 0) return;
-
-      const div = Number(firstNumber) / Number(currentNumber);
-
-      setResult(div);
-      setLastNumber(null);
-      setOperation("/");
-      setOverwrite(true);
-    }
+    handleOperation("/");
   };
 
   const handleEquals = () => {
@@ -228,9 +174,7 @@ const App = () => {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      const key = event.key;
-      console.log(key);
-      
+      const key = event.key;      
 
       if (key >= "0" && key <= "9") {
         handleAddNumber(key);
@@ -267,7 +211,7 @@ const App = () => {
         return;
       }
 
-      if (key === "Escape") {
+      if (key === " ") {
         handleONClear();
         return;
       }
