@@ -2,7 +2,7 @@ import { Conteiner, Content, Row } from "./styles";
 
 import { Input } from "./components/Input";
 import { Button } from "./components/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const App = () => {
   const [currentNumber, setCurrentNumber] = useState("0");
@@ -225,6 +225,64 @@ const App = () => {
       }
     }
   };
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      const key = event.key;
+      console.log(key);
+      
+
+      if (key >= "0" && key <= "9") {
+        handleAddNumber(key);
+        return;
+      }
+
+      if (key === "+") {
+        handleSumNumber();
+        return;
+      }
+
+      if (key === "-") {
+        handleMinusNumber();
+        return;
+      }
+
+      if (key === "*") {
+        handleMutNumber();
+        return;
+      }
+
+      if (key === "/") {
+        handleDivNumber();
+        return;
+      }
+
+      if (key === "Enter" || key === "=") {
+        handleEquals();
+        return;
+      }
+
+      if (key === "Backspace") {
+        handleBackspace();
+        return;
+      }
+
+      if (key === "Escape") {
+        handleONClear();
+        return;
+      }
+
+      if (key === "." || key === ",") {
+        handleAddNumber(".");
+        return;
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  });
 
   return (
     <Conteiner>
