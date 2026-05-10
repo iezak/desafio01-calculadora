@@ -12,6 +12,10 @@ export const ButtonConteiner = styled.button`
     box-sizing: border-box;
     width: ${({ $size }) => `${(($size || 1) / 4) * 100}%`};
 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     &:hover {
         opacity: 0.8;
     }

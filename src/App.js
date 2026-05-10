@@ -50,6 +50,14 @@ const App = () => {
     setCurrentNumber((prev) => `${prev === "0" ? "" : prev}${number}`);
   };
 
+  const handleBackspace = () => {
+    setCurrentNumber((prev) => {
+      if (prev.length === 1) return "0";
+
+      return prev.slice(0, -1);
+    });
+  };
+
   const handleSumNumber = () => {
     setOverwrite(true);
     if (lastNumber !== null && overwrite) {
@@ -223,7 +231,8 @@ const App = () => {
       <Content>
         <Input value={currentNumber} />
         <Row>
-          <Button label={"AC"} size={3} onClick={handleONClear} />
+          <Button label={"AC"} size={2} onClick={handleONClear} />
+          <Button label={"←"} size={1} onClick={handleBackspace} />
           <Button label={"/"} size={1} onClick={handleDivNumber} />
         </Row>
         <Row>
